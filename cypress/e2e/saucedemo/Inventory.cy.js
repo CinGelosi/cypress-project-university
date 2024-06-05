@@ -1,11 +1,13 @@
+const loginPage = require("../pages/login")
+const inventory = require("../pages/inventory")
+
 describe('Inventory', () => {
-    beforeEach(() => {
-        cy.Login()
-        /*cy.visit('https://www.saucedemo.com/')
-        cy.get('#user-name').type("standard_user", {delay:0})
-        cy.get('#password').type("secret_sauce", {delay:0})
-        cy.get('#login-button').click()
-        */
+    beforeEach(function(){
+        cy.visit('https://www.saucedemo.com/')
+        cy.fixture('saucedemoData').then(credentials =>{
+            this.credentials=credentials;
+            loginPage.login(this.credentials.userNameOk,this.credentials.passwordOk)
+        })        
     })
 
     it('Validate the url', () => {
@@ -13,23 +15,22 @@ describe('Inventory', () => {
     })
   
     it('Validate the results number', () => {
-        cy.get('.inventory_item').should('have.length', 6)
+        inventory.allElements().should('have.length', 6)
     })
 
     it('Validate that a product is added to the cart', () => {
-        cy.get('#add-to-cart-sauce-labs-bolt-t-shirt').click()
-        cy.get('.shopping_cart_badge').should('contain', '1')
+        inventory.addToCartSauceLabsBoltTshirt()
+        inventory.cartItem().should('contain', '1')
     })
 
     it('Validate that the button is displayed', () => {
-        cy.get('#add-to-cart-sauce-labs-onesie').click()
-        cy.get('#remove-sauce-labs-onesie').should('contain', 'Remove')
+        inventory.addToCartSauceLabsOnesie()
+        inventory.returnRemoveSauceLabsOnesie().should('contain', 'Remove')
     })
 
     it('Validate that the user can delete one product', () => {
-        cy.get('#add-to-cart-sauce-labs-onesie').as('addLabsOnesie')
-        cy.get('@addLabsOnesie').click()        
-        cy.get('#remove-sauce-labs-onesie').click()
-        cy.get('@addLabsOnesie').should('contain', 'Add to cart')
+        inventory.addToCartSauceLabsOnesie()     
+        inventory.removeSauceLabsOnesie()
+        inventory.buttonAddCartSauceLabsOnesie().should('contain', 'Add to cart')
     })
 })

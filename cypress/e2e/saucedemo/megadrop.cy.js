@@ -1,28 +1,36 @@
+const loginPage = require("../pages/login")
+const megadrop = require("../pages/megadrop")
+
 describe('megadrop', () => {
-    beforeEach(() => {
-        cy.Login()
+    beforeEach(function(){
+        cy.visit('https://www.saucedemo.com/')
+        cy.fixture('saucedemoData').then(credentials =>{
+            this.credentials=credentials;
+            loginPage.login(this.credentials.userNameOk,this.credentials.passwordOk)
+        })        
     })
   
     it('Validate the megadrop is hidden', () => {
-        cy.get('.bm-menu-wrap').invoke('attr', 'aria-hidden').should('eq', 'true')       
+        megadrop.hamburguerMenuShown().invoke('attr', 'aria-hidden').should('eq', 'true')       
     })
 
     it('Validate the megadrop is shown when the user clicks on the hamburguer menu', ()=>{
-        cy.get('.bm-burger-button').click()
-        cy.get('.bm-menu-wrap').invoke('attr', 'aria-hidden').should('eq', 'false')
+        megadrop.openHamburguerMenu()
+        megadrop.hamburguerMenuShown().invoke('attr', 'aria-hidden').should('eq', 'false')
     })
 
     it('Validate the megadrop menu', ()=>{
-        cy.get('.bm-burger-button').click()
-        cy.get('#inventory_sidebar_link').should('be.visible');
-        cy.get('#about_sidebar_link').should('be.visible');
-        cy.get('#reset_sidebar_link').should('be.visible');
-        cy.get('#logout_sidebar_link').should('be.visible');
+        megadrop.openHamburguerMenu()
+        megadrop.menuAllItems().should('be.visible');
+        megadrop.menuAbout().should('be.visible');
+        megadrop.menuLogout().should('be.visible');
+        megadrop.menuResetAppState().should('be.visible');
+        
     })
 
     it('Validate the user can close the megadrop', ()=>{
-        cy.get('.bm-cross-button').click({force: true})
-        cy.get('.bm-menu-wrap').invoke('attr', 'aria-hidden').should('eq', 'true')
+        megadrop.closeMegadrop()
+        megadrop.hamburguerMenuShown().invoke('attr', 'aria-hidden').should('eq', 'true')
     })
 
 
