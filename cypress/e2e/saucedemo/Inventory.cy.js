@@ -1,9 +1,15 @@
 describe('Inventory', () => {
     beforeEach(() => {
-        cy.visit('https://www.saucedemo.com/')
-        cy.get('#user-name').type('standard_user', {delay:0})
-        cy.get('#password').type('secret_sauce', {delay:0})
+        cy.Login()
+        /*cy.visit('https://www.saucedemo.com/')
+        cy.get('#user-name').type("standard_user", {delay:0})
+        cy.get('#password').type("secret_sauce", {delay:0})
         cy.get('#login-button').click()
+        */
+    })
+
+    it('Validate the url', () => {
+        cy.url().should('include', '/inventory.html');
     })
   
     it('Validate the results number', () => {
@@ -21,10 +27,9 @@ describe('Inventory', () => {
     })
 
     it('Validate that the user can delete one product', () => {
-        cy.get('#add-to-cart-sauce-labs-onesie').click()        
+        cy.get('#add-to-cart-sauce-labs-onesie').as('addLabsOnesie')
+        cy.get('@addLabsOnesie').click()        
         cy.get('#remove-sauce-labs-onesie').click()
-        cy.get('#add-to-cart-sauce-labs-onesie').should('contain', 'Add to cart')
+        cy.get('@addLabsOnesie').should('contain', 'Add to cart')
     })
-
-
 })

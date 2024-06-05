@@ -23,3 +23,35 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+
+
+//PROBADO EN LOGIN
+
+Cypress.Commands.add('clickLogin', ()=>{
+    cy.get('#login-button').click()
+})
+
+Cypress.Commands.overwrite('type', (originalFn, element, text, options)=>{
+    if (options && options.sensitive){
+        //turn off original log
+        options.log = false
+        //create our  own log with masked message
+        Cypress.log({
+            $el: element,
+            name: 'type',
+            message: '*'.repeat(text.length)
+        })
+    }
+    return originalFn(element, text, options)
+})
+
+
+//PROBADO EN INVENTORY + SORTING
+
+Cypress.Commands.add('Login', ()=>{
+    cy.visit('https://www.saucedemo.com/')
+    cy.get('#user-name').type("standard_user", {delay:0})
+    cy.get('#password').type("secret_sauce", {delay:0})
+    cy.get('#login-button').click()
+})
