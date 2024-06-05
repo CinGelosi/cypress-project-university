@@ -1,0 +1,6 @@
+{
+    "userNameOk": "standard_user",
+    "passwordOk": "secret_sauce",
+    "userNameNotOk": "standarder",
+    "passwordNotOk": "secreauce"
+}
